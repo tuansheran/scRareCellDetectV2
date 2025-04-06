@@ -1,11 +1,12 @@
 import faiss
 import torch
 import numpy as np
-from utils import get_model, get_embeddings, get_cluster, get_count, get_plot, get_graph
+from .utils import get_model, get_embeddings, get_cluster, get_count, get_plot, get_graph, clean_and_split_data
+
 
 ALLOWED_MODELS = {"model_1", "model_2", "model_3"}
 
-def cell_detection(model, data, data_threshold, count, cluster, plot):
+def cell_detection(model, data, data_threshold, cluster, count, plot):
     
     if model not in ALLOWED_MODELS:
         raise ValueError(f" Model '{model}' is not supported.\n✅ Choose from: {', '.join(sorted(ALLOWED_MODELS))}")
@@ -33,3 +34,14 @@ def cell_detection(model, data, data_threshold, count, cluster, plot):
         if plot == 'yes':
             print("📊 Plotting gene expression by cluster...")
             get_plot(labels, data.data)
+
+
+data = clean_and_split_data('scRNA.mtx', 100000)
+cell_detection(
+    model='model_2',
+    data=data,
+    data_threshold=200,
+    cluster='yes',
+    count='yes',
+    plot='yes',
+)

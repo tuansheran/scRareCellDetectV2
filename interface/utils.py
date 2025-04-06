@@ -1,8 +1,11 @@
+import os
 import torch
 import faiss 
 import numpy as np
+from scipy.io import mmread
 import matplotlib.pyplot as plt
 from torch_geometric.data import Data
+from .graphSAGE import model1, model3, model4
 
 
 def get_graph(data, threshold):
@@ -47,22 +50,23 @@ def get_graph(data, threshold):
 
     x_tensor = torch.tensor(x, dtype=torch.float32)
     pyg_data = Data(edge_index=edge_index, x=x_tensor)
-    print(pyg_data)
     return pyg_data
 
 
 
 def get_model(model_name):
-    model_paths = {
-        "model_1": "../models/entire_model_1.pth",
-        "model_2": "../models/entire_model_2.pth",
-        "model_3": "../models/entire_model_3.pth",
-    }
-    path = model_paths.get(model_name)
-    if path is None:
-        raise ValueError(f"Model '{model_name}' not found.")
     
-    model = torch.load(path, map_location=torch.device("cpu"))
+    model_dict = {
+        "model_1": model1,
+        "model_2": model3,
+        "model_3": model4,
+    }
+
+    model = model_dict.get(model_name)
+    
+    if model is None:
+        raise ValueError(f"Model '{model_name}' not found.")
+
     model.eval()
     return model
 
@@ -133,10 +137,11 @@ def get_plot(labels, gene_expression_levels):
     plt.show()
 
 
-def clean_and_split_data(coo_matrix, max_number):
+def clean_and_split_data(path, max_number):
+    rawData = mmread('./scRNA.mtx')
 
-    if not isinstance(coo_matrix, coo_matrix.__class__):
-        raise TypeError("❌ Input must be a SciPy COO sparse matrix (.mtx format).")
+    coo_matrix = rawData.tocoo()
+
 
     if max_number > 1000000:
         raise ValueError("⚠️ max_number exceeds 1 million. Cannot proceed for performance reasons.")
