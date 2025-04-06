@@ -62,8 +62,8 @@ def get_model(model_name):
         "model_3": model4,
     }
 
-    model = model_dict.get(model_name)
-    
+    # model = model_dict.get(model_name)
+    model = torch.load('./entire_model1.pth', map_location=torch.device("cpu"))
     if model is None:
         raise ValueError(f"Model '{model_name}' not found.")
 

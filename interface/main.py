@@ -2,7 +2,8 @@ import faiss
 import torch
 import numpy as np
 from .utils import get_model, get_embeddings, get_cluster, get_count, get_plot, get_graph, clean_and_split_data
-
+from interface import get_model
+from .graphSAGE import GraphSAGE
 
 ALLOWED_MODELS = {"model_1", "model_2", "model_3"}
 
@@ -38,7 +39,7 @@ def cell_detection(model, data, data_threshold, cluster, count, plot):
 
 data = clean_and_split_data('scRNA.mtx', 100000)
 cell_detection(
-    model='model_2',
+    model='model_3',
     data=data,
     data_threshold=200,
     cluster='yes',
