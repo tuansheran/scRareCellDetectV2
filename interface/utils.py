@@ -54,23 +54,6 @@ def get_graph(data, threshold):
 
 
 
-def get_model(model_name):
-    
-    model_dict = {
-        "model_1": model1,
-        "model_2": model3,
-        "model_3": model4,
-    }
-
-    # model = model_dict.get(model_name)
-    model = torch.load('./entire_model1.pth', map_location=torch.device("cpu"))
-    if model is None:
-        raise ValueError(f"Model '{model_name}' not found.")
-
-    model.eval()
-    return model
-
-
 def get_embeddings(model, x, edge_index):
     with torch.no_grad():
         embeddings = model(x, edge_index)
@@ -134,6 +117,16 @@ def get_plot(labels, gene_expression_levels):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
+    plt.show()
+
+    cell_indices = np.arange(num_cells)
+    plt.figure(figsize=(12, 6))
+    plt.scatter(gene_expression_levels_cpu, cell_indices, c=labels, cmap='tab10', alpha=0.5, s=2)
+    plt.xlabel('Gene Expression Level')
+    plt.ylabel('Cell Index')
+    plt.title('Gene Expression Levels Across Cells (Colored by Cluster)')
+    plt.colorbar(label='Cluster ID')
+    plt.grid(True)
     plt.show()
 
 
