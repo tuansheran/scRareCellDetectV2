@@ -1,7 +1,7 @@
 import faiss
 import torch
 import numpy as np
-from .utils import get_model, get_embeddings, get_cluster, get_count, get_plot, get_graph, clean_and_split_data
+from .utils import get_embeddings, get_cluster, get_count, get_plot, get_graph, clean_and_split_data
 from interface import get_model
 from .graphSAGE import GraphSAGE
 

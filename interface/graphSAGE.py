@@ -2,9 +2,6 @@ import torch
 import torch.nn.functional as F
 from torch_geometric.nn import SAGEConv
 
-device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
-
-
 class GraphSAGE(torch.nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels, num_layers=2):
         super(GraphSAGE, self).__init__()
@@ -23,7 +20,3 @@ class GraphSAGE(torch.nn.Module):
             x = F.dropout(x, p=0.5, training=self.training)
         x = self.convs[-1](x, edge_index) 
         return x  
-    
-model1 = GraphSAGE(in_channels=1, hidden_channels=64,out_channels=64, num_layers=4)
-model3 = GraphSAGE(in_channels=1, hidden_channels=8, out_channels=4, num_layers=2)
-model4 = GraphSAGE(in_channels=1, hidden_channels=8, out_channels=4, num_layers=4)
