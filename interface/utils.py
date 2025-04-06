@@ -138,8 +138,7 @@ def get_plot(labels, gene_expression_levels):
 
 
 def clean_and_split_data(path, max_number):
-    rawData = mmread('./scRNA.mtx')
-
+    rawData = mmread(path)
     coo_matrix = rawData.tocoo()
 
 
