@@ -1,50 +1,35 @@
+import faiss
 import torch
-import faiss 
 import numpy as np
-from torch_geometric.data import Data
+from utils import get_model, get_embeddings, get_cluster, get_count, get_plot, get_graph
 
-def cell_graph(data, threshold):
+ALLOWED_MODELS = {"model_1", "model_2", "model_3"}
 
-    gene_expression = data.data
+def cell_detection(model, data, data_threshold, count, cluster, plot):
     
-    x = np.asarray(gene_expression, dtype=np.float32)
-    x = x.reshape(-1, 1)
-
-
-    gpu_resource_manager = faiss.StandardGpuResources() 
-    similarity_object = faiss.IndexFlatL2(1)
-    similarity_object_in_gpu = faiss.index_cpu_to_gpu(gpu_resource_manager, 0, similarity_object)
-
-
-    print(similarity_object_in_gpu.is_trained)  
-    print(f"FAISS index type: {type(similarity_object_in_gpu)}") 
-
-
-    similarity_object_in_gpu.add(x)
-    k=2
-    distances, indices = similarity_object_in_gpu.search(x, k + 1)
+    if model not in ALLOWED_MODELS:
+        raise ValueError(f" Model '{model}' is not supported.\n✅ Choose from: {', '.join(sorted(ALLOWED_MODELS))}")
     
-    edge_index_list = []
-    outliers = []
-    
-    for i in range(len(gene_expression)):
-        nearest_neighbors = indices[i, 1:k+1]  
-        neighbor_distances = distances[i, 1:k+1]
-        
-        for j, dist in zip(nearest_neighbors, neighbor_distances):
-            if dist <= threshold ** 2:
-                edge_index_list.append((i, j))
-            else:
-                outliers.append(int(j))
-    
+    if data is None:
+        raise ValueError("Please provide input data with `.data` as a NumPy array.")
 
-    edge_index_np = np.array(edge_index_list).T
-    edge_index = torch.tensor(edge_index_np, dtype=torch.long) if edge_index_np.size > 0 else torch.empty((2, 0), dtype=torch.long)
+    print(f"✅ Loading model: {model}")
+    loaded_model = get_model(model)
 
-    cleaned_outliers = list(set(outliers))
-    print(cleaned_outliers)
+    print("🔧 Constructing graph from data...")
+    pyg_data = get_graph(data, data_threshold)
 
-    x_tensor = torch.tensor(x, dtype=torch.float32)
-    pyg_data = Data(edge_index=edge_index, x=x_tensor)
-    print(pyg_data)
-    return pyg_data
+    print("📐 Getting embeddings...")
+    embeddings = get_embeddings(loaded_model, pyg_data.x, pyg_data.edge_index)
+
+    if cluster == 'yes':
+        print("🔍 Performing clustering...")
+        labels = get_cluster(embeddings)
+
+        if count == 'yes':
+            print("🔢 Cluster counts:")
+            get_count(labels)
+
+        if plot == 'yes':
+            print("📊 Plotting gene expression by cluster...")
+            get_plot(labels, data.data)
