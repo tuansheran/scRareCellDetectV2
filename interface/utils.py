@@ -5,7 +5,6 @@ import numpy as np
 from scipy.io import mmread
 import matplotlib.pyplot as plt
 from torch_geometric.data import Data
-from .graphSAGE import model1, model3, model4
 
 
 def get_graph(data, threshold):

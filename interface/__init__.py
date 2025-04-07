@@ -8,9 +8,9 @@ DEFAULT_MODEL_PATH = os.path.join(MODEL_DIR, "entire_model1.pth")
 
 def get_model(model_name="model_1"):
     model_paths = {
-        "model_1": os.path.join(MODEL_DIR, "entire_model1.pth"),
-        "model_2": os.path.join(MODEL_DIR, "entire_model3.pth"),
-        "model_3": os.path.join(MODEL_DIR, "entire_model4.pth"),
+        "model_1": os.path.join(MODEL_DIR, "./saved_trained_models/entire_model1.pth"),
+        "model_2": os.path.join(MODEL_DIR, "./saved_trained_models/entire_model3.pth"),
+        "model_3": os.path.join(MODEL_DIR, "./saved_trained_models/entire_model4.pth"),
     }
 
 
