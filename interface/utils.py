@@ -44,8 +44,9 @@ def get_graph(data, threshold):
     edge_index_np = np.array(edge_index_list).T
     edge_index = torch.tensor(edge_index_np, dtype=torch.long) if edge_index_np.size > 0 else torch.empty((2, 0), dtype=torch.long)
 
-    cleaned_outliers = list(set(outliers))
-    print(cleaned_outliers)
+    print("Outlier cells:")
+    for idx in sorted(outliers):
+        print(f"Cell {idx} - outlier with gene expression level {gene_expression[idx]}")
 
     x_tensor = torch.tensor(x, dtype=torch.float32)
     pyg_data = Data(edge_index=edge_index, x=x_tensor)
