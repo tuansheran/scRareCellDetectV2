@@ -4,17 +4,17 @@ This project applies Graph Neural Networks (GNNs) to identify rare cell populati
 
 ### Key Features:
 
-*Efficient graph construction from sparse gene expression matrices
+1.Efficient graph construction from sparse gene expression matrices
 
-*Unsupervised GNN training with contrastive loss
+2.Unsupervised GNN training with contrastive loss
 
-*Embedding-based clustering for rare cell detection
+3.Embedding-based clustering for rare cell detection
 
 ### Techniques Used:
 
-*GraphSAGE
+1.GraphSAGE
 
-*FAISS
+2.FAISS
 
-*CUDA GPU Optimization 
+3.CUDA GPU Optimization 
 
